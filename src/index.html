@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Udacity Mobile Web Specialist Restaurant Project">
+  <meta name="viewport" content="width=device-width, intial-scale=1.0">
+  <meta name="theme-color" content="#000000" />
+  <!--Normalizes elements more consistently across browsers-->
+  <link rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" />
+  <!-- build:css css/home.css -->
+  <link rel="stylesheet" href="css/home.css">
+  <!-- endbuild -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="img/unaltered/icon.png">
+  <!--Main Google Font-->
+  <link href='https://fonts.googleapis.com/css?family=Libre+Franklin|Noto+Serif+JP' rel='stylesheet'>
+  <!--Links to servicework for offline cachinng-->
+  <title>Restaurant Reviews</title>
+</head>
+
+<body>
+
+  <!-- Begins header -->
+  <header>
+    <nav>
+      <h1>
+        <a tabindex="-1" href="/">Restaurant Reviews</a>
+      </h1>
+    </nav>
+  </header>
+  <!-- Ends header -->
+
+
+  <!-- Beginning main -->
+  <main id="maincontent">
+    <label id="map-aria-description">
+      <section id="map-container">
+        <div id="map" role="application"></div>
+      </section>
+    </label>
+
+    <section id="display-list">
+      <div class="filter-options">
+        <h2>Filter Results</h2>
+        <label id="neighborhoods-label" class="filter-label">
+          <select tabindex="0" id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+            <option value="all">All Neighborhoods</option>
+          </select>
+        </label>
+
+        <label id="cuisines-label" class="filter-label">
+          <select tabindex="0" id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+            <option value="all">All Cuisines</option>
+          </select>
+        </label>
+      </div>
+      <ul id="restaurants-list"></ul>
+    </section>
+
+  </main>
+  <!-- End main -->
+
+  <!-- Beginning footer -->
+  <footer id="footer" role="contentinfo">
+    Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
+  </footer>
+  <!-- Ends footer -->
+
+  <!-- build:js js/main.min.js -->
+  <script src="js/dbhelper.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/register.js"></script>
+  <!-- endbuild -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.js"></script>
+  <!-- Google Maps -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKNb-anVS2GiIBK2uFRtU2-5S1zTRyilM&libraries=places&callback=initMap"></script>
+
+</body>
+
+</html>

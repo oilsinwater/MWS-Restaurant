@@ -1,0 +1,14 @@
+# apple itunes 
+.DS_Store
+
+# Api key
+MAPS_KEY
+
+# vs-code folder
+.vscode/
+
+# dist, tmp folder
+/build
+/dist
+/.tmp
+
