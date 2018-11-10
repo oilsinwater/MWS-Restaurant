@@ -12,31 +12,12 @@ let source = require('vinyl-source-stream');
 let buffer = require('vinyl-buffer');
 let runSequence = require('run-sequence');
 let lazypipe = require('lazypipe');
-let imageminPngquant = require('imagemin-pngquant');
+let pngquant = require('imagemin-pngquant');
 let imagemin = require('gulp-imagemin');
+let workboxBuild = require('workbox-build');
 
 let $ = gulpLoadPlugins();
 let reload = browserSync.reload;
-
-// // declare and assign paths
-// const paths = {
-//   notNode: '!node_modules/**',
-
-//   src: 'src/',
-//   srcHTML: 'src/*.html',
-//   srcCSS: 'src/css/*.css',
-//   srcJS: 'src/js/*.js',
-
-//   tmp: '.tmp/', // tmp folder
-//   tmpIndex: '.tmp/index.html', // index.html tmp folder
-//   tmpCSS: '.tmp/**/*.css', // css files in .tmp folder
-//   tmpJS: '.tmp/**/*.js', // js files in .tmp folder
-
-//   dist: 'dist/',
-//   distIndex: 'dist/index.html',
-//   distCSS: 'dist/**/*.css',
-//   distJS: 'dist/**/*.js'
-// };
 
 // lint
 gulp.task('lint', () => {
@@ -67,48 +48,6 @@ gulp.task('neck', () => {
   console.log('...GUUULP!!');
 });
 
-// Watch changes and reload
-gulp.task('serve', () => {
-  runSequence(
-    ['clear', 'start', 'images', 'lint', 'sw', 'html', 'manifest'],
-    () => {
-      browserSync.init({
-        server: '.tmp',
-        port: 3030
-      });
-      // watch
-      gulp.watch(['src/*.html'], ['html', reload]);
-      gulp.watch(['src/css/*.css'], ['html', reload]);
-      gulp.watch(['src/js/*.js'], ['lint', 'html', reload]);
-      gulp.watch(['src/sw.js'], ['lint', 'sw', reload]);
-      gulp.watch(['src/manifest.json'], ['manifest', reload]);
-    }
-  );
-});
-
-// Bundle and serve the optimized site
-gulp.task('serve:dist', ['default'], () => {
-  browserSync.init({
-    server: 'dist',
-    port: 3031
-  });
-
-  gulp.watch(['src/*.html'], ['html:dist', reload]);
-  gulp.watch(['src/css/*.css'], ['html:dist', reload]);
-  gulp.watch(['src/js/*.js'], ['lint', 'html:dist', reload]);
-  gulp.watch(['src/sw.js'], ['lint', 'sw:dist', reload]);
-  gulp.watch(['src/manifest.json'], ['manifest:dist', reload]);
-});
-
-// serve & watch
-//gulp.task('serve:build', ['copy', 'js', 'serve']);
-
-// ensures js task is completed before reloading
-// gulp.task('js-watch', ['js'], done => {
-//   browserSync.reload();
-//   done();
-// });
-
 // Copy unaltered images
 gulp.task('unaltered', () => {
   return gulp
@@ -124,20 +63,60 @@ gulp.task('images', ['unaltered'], () => {
     .pipe(
       imagemin({
         progressive: true,
-        use: [imageminPngquant()],
+        use: [pngquant()],
         speed: 5
       }).pipe(
         $.responsive(
           {
-            '*.jpg': [
-              { width: 300, rename: { suffix: '-300' } },
-              { width: 400, rename: { suffix: '-400' } },
-              { width: 600, rename: { suffix: '-600_2x' } },
-              { width: 800, rename: { suffix: '-800_2x' } }
+            '*': [
+              {
+                width: 250,
+                rename: {
+                  suffix: '-250',
+                  extname: '.webp'
+                }
+              },
+              {
+                width: 250,
+                rename: {
+                  suffix: '-250',
+                  extname: '.jpg'
+                }
+              },
+              {
+                width: 400,
+                rename: {
+                  suffix: '-400',
+                  extname: '.webp'
+                }
+              },
+              {
+                width: 400,
+                rename: {
+                  suffix: '-400',
+                  extname: '.jpg'
+                }
+              },
+              {
+                width: 600,
+                rename: { suffix: '-600_2x', extname: '.webp' }
+              },
+              {
+                width: 600,
+                rename: { suffix: '-600_2x', extname: '.jpg' }
+              },
+              {
+                width: 800,
+                rename: { suffix: '-800_2x', extname: '.webp' }
+              },
+              {
+                width: 800,
+                rename: { suffix: '-800_2x', extname: '.jpg' }
+              }
             ]
           },
           {
-            quality: 40,
+            quality: 60,
             progressive: true,
             withMetadata: false
           }
@@ -147,20 +126,6 @@ gulp.task('images', ['unaltered'], () => {
     .pipe(gulp.dest('.tmp/img'))
     .pipe(gulp.dest('dist/img'));
 });
-
-// gulp.task('images', ['unaltered'], () => {
-//   return gulp
-//     .src('src/img/*')
-//     .pipe(
-//       imagemin({
-//         progressive: true,
-//         use: [imageminPngquant()],
-//         speed: 5
-//       })
-//     )
-//     .pipe(gulp.dest('.tmp/img'))
-//     .pipe(gulp.dest('dist/img'));
-// });
 
 // Prep process of js, css, html files
 gulp.task('html', () => {
@@ -234,7 +199,7 @@ gulp.task('html:dist', () => {
 
 // process sw
 gulp.task('sw', () => {
-  let bundler = browserify('./src/sw.js', {
+  let bundler = browserify('./.tmp/sw.js', {
     debug: true
   });
   return bundler
@@ -246,7 +211,7 @@ gulp.task('sw', () => {
 
 // optimize sw
 gulp.task('sw:dist', () => {
-  let bundler = browserify('./src/sw.js', {
+  let bundler = browserify('./dist/sw.js', {
     debug: true
   });
   return bundler
@@ -273,8 +238,59 @@ gulp.task('sw:dist', () => {
     .pipe(gulp.dest('dist'));
 });
 
+// Generate a service worker
+gulp.task('service-worker', () => {
+  //returns a promise
+  return workboxBuild.generateSW({
+    globDirectory: 'dist',
+    globPatterns: ['**/*.{html,json,js,css}'],
+    swDest: 'dist/sw.js',
+    //Defines runtime caching rules:
+    runtimeCaching: [
+      {
+        urlPattern: /\.(?:png|jpg|webp)$/,
+        // Apply a cache-first strategy
+        handler: 'cacheFirst',
+        options: {
+          // custom cache name
+          cacheName: 'img',
+          // Only cache 12 images
+          expiration: {
+            maxEntries: 49 // arbitrary...
+          }
+        }
+      }
+    ]
+  });
+});
+
+gulp.task('service-temp', () => {
+  //returns a promise
+  return workboxBuild.generateSW({
+    globDirectory: '.tmp',
+    globPatterns: ['**/*.{html,json,js,css}'],
+    swDest: '.tmp/sw.js',
+    //Defines runtime caching rules:
+    runtimeCaching: [
+      {
+        urlPattern: /\.(?:png|jpg|webp)$/,
+        // Apply a cache-first strategy
+        handler: 'cacheFirst',
+        options: {
+          // custom cache name
+          cacheName: 'img',
+          // Only cache 12 images
+          expiration: {
+            maxEntries: 49 // arbitrary...
+          }
+        }
+      }
+    ]
+  });
+});
+
 // Copy web manifest
-gulp.task('manifest:dist', () => {
+gulp.task('manifest', () => {
   return gulp.src('src/manifest.json').pipe(gulp.dest('.tmp/'));
 });
 
@@ -282,14 +298,61 @@ gulp.task('manifest:dist', () => {
   return gulp.src('src/manifest.json').pipe(gulp.dest('dist/'));
 });
 
-// Build production files,
+// Watch changes and reload
+gulp.task('serve', () => {
+  runSequence(
+    [
+      'start',
+      'clear',
+      'images',
+      'lint',
+      'html',
+      'service-temp',
+      'sw',
+      'manifest',
+      'neck'
+    ],
+    () => {
+      browserSync.init({
+        server: '.tmp',
+        port: 3030
+      });
+      // watch
+      gulp.watch(['src/*.html'], ['html', reload]);
+      gulp.watch(['src/img/**'], ['images', reload]);
+      gulp.watch(['src/css/*.css'], ['html', reload]);
+      gulp.watch(['src/js/*.js'], ['lint', 'html', reload]);
+      gulp.watch(['src/sw.js'], ['lint', 'sw', reload]);
+      gulp.watch(['src/manifest.json'], ['manifest', reload]);
+    }
+  );
+});
+
+// Bundle and serve the optimized site
+gulp.task('serve:dist', ['default'], () => {
+  browserSync.init({
+    server: 'dist',
+    port: 8000
+  });
+
+  gulp.watch(['src/*.html'], ['html:dist', reload]);
+  gulp.watch(['src/img/**'], ['images', reload]);
+  gulp.watch(['src/css/*.css'], ['html:dist', reload]);
+  gulp.watch(['src/js/*.js'], ['lint', 'html:dist', reload]);
+  gulp.watch(['src/sw.js'], ['lint', 'sw:dist', reload]);
+  gulp.watch(['src/manifest.json'], ['manifest:dist', reload]);
+});
+
+// Build production files in order,
 gulp.task('default', ['clear:dist'], done => {
   runSequence(
     [
       'start',
+      'clear',
       'images',
       'lint',
       'html:dist',
+      'service-worker',
       'sw:dist',
       'manifest:dist',
       'neck'

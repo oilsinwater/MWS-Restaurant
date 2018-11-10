@@ -186,24 +186,8 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return `/img/$(restaurant.id)-300.jpg 1x, /img/${
-      restaurant.id
-    }-600_2x.jpg 2x`;
     // return `/img/${restaurant.photograph}`;
-  }
-
-  /**
-   * Map marker for a restaurant.
-   */
-  static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP
-    });
-    return marker;
+    return `/img/${restaurant.id}-250.jpg`;
   }
 
   /**
@@ -211,10 +195,10 @@ class DBHelper {
    */
 
   static imageSrcsetForHome(restaurant) {
-    return `/img/${restaurant.id}-300.jpg 1x, /img/${
+    // return `${restaurant.photograph}`;
+    return `/img/${restaurant.id}-250.webp 1x, /img/${
       restaurant.id
-    }-600_2x.jpg 2x`;
-    // return `${restaurant.srcset_index}`;
+    }-600_2x.webp 2x`;
   }
 
   /**
@@ -222,11 +206,42 @@ class DBHelper {
    */
 
   static imageSrcsetForReviews(restaurant) {
-    return `/img/${restaurant.id}-300.jpg 300w, /img/${
-      restaurant.id
-    }-400.jpg 400w, /img/${restaurant.id}-600_2x.jpg, /img/${
-      restaurant.id
-    }-800_2x.jpg 800w`;
     // return `${restaurant.srcset_restaurant}`;
+    return `/img/${restaurant.id}-250.webp 300w, /img/${
+      restaurant.id
+    }-400.webp 400w, /img/${restaurant.id}-600_2x.webp, /img/${
+      restaurant.id
+    }-800_2x.webp 800w`;
   }
+
+  /**
+   * Map marker for a restaurant.
+   */
+
+  static mapMarkerForRestaurant(restaurant, map) {
+    // https://leafletjs.com/reference-1.3.0.html#marker
+    const marker = new L.marker(
+      [restaurant.latlng.lat, restaurant.latlng.lng],
+      {
+        title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
+      }
+    );
+    marker.addTo(newMap);
+    return marker;
+  }
+
+  // static mapMarkerForRestaurant(restaurant, map) {
+  //   const marker = new google.maps.Marker({
+  //     position: restaurant.latlng,
+  //     title: restaurant.name,
+  //     url: DBHelper.urlForRestaurant(restaurant),
+  //     map: map, 
+  //     animation: google.maps.Animation.DROP
+  //   });
+  //   return marker;
+  // }
 }
+
+export default DBHelper;

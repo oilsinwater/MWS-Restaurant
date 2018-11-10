@@ -33,8 +33,6 @@
   --case: uppercase;
 }
 
-
-
 html {
   box-sizing: border-box;
 }
@@ -89,6 +87,9 @@ h6 {
   font-family: var(--serif, Georgia);
   margin: 0 0 20px;
 }
+img {
+border-radius: 50px;
+}
 article,
 aside,
 canvas,
@@ -116,6 +117,25 @@ section {
   padding: 25px;
   text-align: var(--place);
   text-transform: var(--case);
+}
+
+.fade-in {
+  animation-name: fadeIn;
+  animation-duration: 1.3s;
+  animation-timing-function: cubic-bezier(0, 0, 0.4, 1);
+  animation-fill-mode: forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.centered {
+   display:block;
+   margin:0 auto;
 }
 /* ====================== Navigation ====================== */
 nav {
@@ -224,7 +244,7 @@ nav h1 a {
 }
 #restaurants-list li {
   background-color: var(--black);
-  border: 2px solid var(--light-grey);
+  border: 1px solid var(--pink);
   font-family: var(--serif, Georgia);
   background-color: var(--white: #ffffff);
   margin: 15px;
@@ -232,8 +252,9 @@ nav h1 a {
   padding: 1.875rem 1.875rem 1.6rem;
   text-align: var(--place: left);
   width: 270px;
+  border-radius: 50px;
 }
-#restaurants-list .restaurant-img {
+#restaurants-list .lazy-load {
   background-color: var(--light-grey);
   display: block;
   margin: 0;

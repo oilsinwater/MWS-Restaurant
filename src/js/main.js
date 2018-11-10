@@ -1,6 +1,6 @@
-let restaurants, neighborhoods, cuisines;
-var map;
-var markers = [];
+let restaurants, neighborhoods, cuisines; /* eslint-disable-line no-alert */
+var map; /* eslint-disable-line no-alert */
+var markers = []; /* eslint-disable-line no-alert */
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -68,9 +68,34 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
 };
 
 /**
+ * Initialize leaflet map, called from HTML.
+ */
+// initMap = () => {
+//   self.newMap = L.map('map', {
+//     center: [40.722216, -73.987501],
+//     zoom: 12,
+//     scrollWheelZoom: false
+//   });
+//   L.tileLayer(
+//     'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}',
+//     {
+//       mapboxToken: SECRET.mapbox_key,
+//       maxZoom: 18,
+//       attribution:
+//         'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+//         '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+//         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+//       id: 'mapbox.streets'
+//     }
+//   ).addTo(newMap);
+
+//   updateRestaurants();
+// };
+
+/**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+const initMap = () => {
   let loc = {
     lat: 40.722216,
     lng: -73.987501
@@ -137,43 +162,99 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
   addMarkersToMap();
 };
 
+// /**
+//  * Create restaurant HTML.
+//  */
+// const createRestaurantHTML = restaurant => {
+//   const li = document.createElement('li');
+//   const image = document.createElement('img');
+//   const imgTxt =
+//     restaurant.name +
+//     ' restaurant in neighborhood of ' +
+//     restaurant.neighborhood +
+//     '.';
+//   image.title = imgTxt;
+//   image.alt = imgTxt;
+//   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+//   image.srcset = DBHelper.imageSrcsetForHome(restaurant);
+//   image.sizes = '300px';
+//   image.className = 'restaurant-img';
+//   li.append(image);
+
+//   const name = document.createElement('h1');
+//   name.innerHTML = restaurant.name;
+//   li.append(name);
+
+//   const neighborhood = document.createElement('p');
+//   neighborhood.innerHTML = restaurant.neighborhood;
+//   li.append(neighborhood);
+
+//   const address = document.createElement('p');
+//   address.innerHTML = restaurant.address;
+//   li.append(address);
+
+//   const more = document.createElement('a');
+//   more.innerHTML = 'View Details';
+//   more.href = DBHelper.urlForRestaurant(restaurant);
+//   more.addEventListener('click', () => {
+//     window.location.href = DBHelper.urlForRestaurant(restaurant);
+//   });
+//   li.append(more);
+
+//   return li;
+// };
+
+/**
+ * Set HTML attributes
+ */
+
 /**
  * Create restaurant HTML.
  */
 const createRestaurantHTML = restaurant => {
   const li = document.createElement('li');
-
   const image = document.createElement('img');
-  const imgTxt =
-    restaurant.name +
-    ' restaurant in neighborhood of ' +
-    restaurant.neighborhood +
-    '.';
-  image.title = imgTxt;
-  image.alt = imgTxt;
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.srcset = DBHelper.imageSrcsetForHome(restaurant);
-  image.sizes = '300px';
+  const name = document.createElement('h1');
+  const neighborhood = document.createElement('p');
+  const address = document.createElement('p');
+  const more = document.createElement('a');
+  const imgTxt = `${restaurant.name} restaurant, in the neighborhood of ${
+    restaurant.neighborhood
+  }`;
+
+  function setAtrributes(el, attrs) {
+    for (let key in attrs) {
+      el.setAttribute(key, attrs[key]);
+    }
+  }
+
+  setAtrributes(image, {
+    alt: imgTxt,
+    className: 'lazyload',
+    src: DBHelper.imageUrlForRestaurant(restaurant),
+    'data-src': DBHelper.imageUrlForRestaurant(restaurant),
+    'data-srcset': DBHelper.imageSrcsetForHome(restaurant),
+    sizes:
+      '(min-width: 300px) 250px, (min-width: 425px) 400px, (min-width: 635px) 600px, (min-width: 636px) 400px',
+    title: imgTxt
+  });
   li.append(image);
 
-  const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
   li.append(name);
 
-  const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
 
-  const address = document.createElement('p');
   address.innerHTML = restaurant.address;
   li.append(address);
 
-  const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
+  more.addEventListener('click', () => {
+    window.location.href = DBHelper.urlForRestaurant(restaurant);
+  });
   li.append(more);
-
   return li;
 };
 

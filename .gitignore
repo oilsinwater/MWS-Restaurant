@@ -1,8 +1,8 @@
 # apple itunes 
 .DS_Store
 
-# Api key
-MAPS_KEY
+# Node modules
+node_modules/
 
 # vs-code folder
 .vscode/
@@ -12,3 +12,7 @@ MAPS_KEY
 /dist
 /.tmp
 
+# ignore logs 
+logs
+*.log
+npm-debug.log*

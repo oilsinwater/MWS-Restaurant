@@ -1,6 +1,6 @@
 {
   "name": "Udacity MWS Nanodegree Restaurant Project",
-  "short_name": "Restaurants",
+  "short_name": "Restaurants Reviews",
   "theme_color": "#000000",
   "background_color": "#dcedfd",
   "display": "standalone",
@@ -8,15 +8,15 @@
   "start_url": "/index.html",
   "icons": [
     {
-      "src": "/inmg/unaltered/udacity-1-168.png",
+      "src": "/img/unaltered/icons/udacity-1-168.png",
       "type": "image/png",
       "sizes": "168x168"
     },
-      {
-        "src": "/inmg/unaltered/udacity-2-579.png",
-        "type": "image/png",
-        "sizes": "579X579"
-      }
+    {
+      "src": "/img/unaltered/icons/udacity-2-579.png",
+      "type": "image/png",
+      "sizes": "579X579"
+    }
   ],
   "splash-pages": null
 }
