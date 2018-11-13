@@ -53,24 +53,31 @@ const fetchRestaurantFromURL = callback => {
  */
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
-  name.innerHTML = restaurant.name;
-
   const address = document.getElementById('restaurant-address');
-  address.innerHTML = restaurant.address;
-
-  const image = document.getElementById('restaurant-img');
-  const imgTxt =
-    restaurant.name +
-    ' restaurant in the neighborhood of ' +
-    restaurant.neighborhood +
-    '.';
-  image.className = 'restaurant-img';
-  image.title = imgTxt;
-  image.alt = imgTxt;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.setAttribute('alt', `Image of ${restaurant.name} restaurant.`);
-
   const cuisine = document.getElementById('restaurant-cuisine');
+  const image = document.getElementById('restaurant-img');
+  const imgTxt = `${restaurant.name} restaurant, in the neighborhood of ${
+    restaurant.neighborhood
+  }`;
+
+  function setAtrributes(el, attrs) {
+    for (let key in attrs) {
+      el.setAttribute(key, attrs[key]);
+    }
+  }
+
+  setAtrributes(image, {
+    alt: imgTxt,
+    className: 'restaurant-img',
+    src: DBHelper.imageUrlForRestaurant(restaurant),
+    srcset: DBHelper.imageSrcsetForRestaurant(restaurant),
+    sizes: DBHelper.imageSizesForRestaurant(restaurant),
+    title: imgTxt
+  });
+  li.append(image);
+
+  name.innerHTML = restaurant.name;
+  address.innerHTML = restaurant.address;
   cuisine.innerHTML = restaurant.cuisine_type;
 
   // fill operating hours

@@ -1,6 +1,6 @@
-const registerWorker = () => {
+let registerWorker = () => {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').then(
+    navigator.serviceWorker.register('/sw.js').then(
       () => {
         console.log('CLIENT: service worker registration complete!');
       },
@@ -13,6 +13,7 @@ const registerWorker = () => {
     );
   }
 };
+
 window.addEventListener('load', () => {
   registerWorker();
 });

@@ -3,7 +3,6 @@
  */
 class DBHelper {
   // eslint-disable-line no-unused-vars
-
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
@@ -12,26 +11,25 @@ class DBHelper {
     const port = 1337; // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
-
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    /*
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
-    */
+    // let xhr = new XMLHttpRequest();
+    // xhr.open('GET', DBHelper.DATABASE_URL);
+    // xhr.onload = () => {
+    //   if (xhr.status === 200) {
+    //     // Got a success response from server!
+    //     const json = JSON.parse(xhr.responseText);
+    //     const restaurants = json.restaurants;
+    //     callback(null, restaurants);
+    //   } else {
+    //     // Oops!. Got an error from server.
+    //     const error = `Request failed. Returned status of ${xhr.status}`;
+    //     callback(error, null);
+    //   }
+    // };
+    // xhr.send();
 
     fetch(DBHelper.DATABASE_URL)
       .then(response => {
@@ -186,32 +184,35 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    // return `/img/${restaurant.photograph}`;
-    return `/img/${restaurant.id}-250.jpg`;
+    let url = `/img/${restaurant.photograph.split('.')[0] ||
+      restaurant.id}-300.png`;
+    return url;
   }
 
   /**
    * Homepage image srcset
    */
 
-  static imageSrcsetForHome(restaurant) {
+  static imageSrcsetForRestaurant(restaurant) {
     // return `${restaurant.photograph}`;
-    return `/img/${restaurant.id}-250.webp 1x, /img/${
-      restaurant.id
-    }-600_2x.webp 2x`;
+    const imgSrc = `/img/${restaurant.photograph.split('.')[0] ||
+      restaurant.id}`;
+    return `${imgSrc}-300.png 300w,
+    ${imgSrc}-600.png 600w,
+    ${imgSrc}-800.png 800w`;
   }
 
+  static imageSizesForRestaurant(restaurant) {
+    return `(max-width: 360px) 280px,
+    (max-width: 600px) 600px,
+    800px`;
+  }
   /**
    * Reviews image srcset
    */
 
   static imageSrcsetForReviews(restaurant) {
-    // return `${restaurant.srcset_restaurant}`;
-    return `/img/${restaurant.id}-250.webp 300w, /img/${
-      restaurant.id
-    }-400.webp 400w, /img/${restaurant.id}-600_2x.webp, /img/${
-      restaurant.id
-    }-800_2x.webp 800w`;
+    return `${restaurant.srcset_restaurant}`;
   }
 
   /**
@@ -237,11 +238,9 @@ class DBHelper {
   //     position: restaurant.latlng,
   //     title: restaurant.name,
   //     url: DBHelper.urlForRestaurant(restaurant),
-  //     map: map, 
+  //     map: map,
   //     animation: google.maps.Animation.DROP
   //   });
   //   return marker;
   // }
 }
-
-export default DBHelper;

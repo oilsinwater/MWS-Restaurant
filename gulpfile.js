@@ -70,53 +70,50 @@ gulp.task('images', ['unaltered'], () => {
           {
             '*': [
               {
-                width: 250,
+                width: 800,
+                quality: 70,
                 rename: {
-                  suffix: '-250',
+                  suffix: '-800',
                   extname: '.webp'
                 }
               },
               {
-                width: 250,
+                width: 800,
+                quality: 70,
                 rename: {
-                  suffix: '-250',
-                  extname: '.jpg'
+                  suffix: '-800',
+                  extname: '.png'
                 }
               },
               {
-                width: 400,
+                width: 600,
+                quality: 50,
                 rename: {
-                  suffix: '-400',
+                  suffix: '-600',
                   extname: '.webp'
                 }
               },
               {
-                width: 400,
+                width: 600,
+                quality: 50,
                 rename: {
-                  suffix: '-400',
-                  extname: '.jpg'
+                  suffix: '-600',
+                  extname: '.png'
                 }
               },
               {
-                width: 600,
-                rename: { suffix: '-600_2x', extname: '.webp' }
+                width: 300,
+                quality: 40,
+                rename: { suffix: '-300', extname: '.webp' }
               },
               {
-                width: 600,
-                rename: { suffix: '-600_2x', extname: '.jpg' }
-              },
-              {
-                width: 800,
-                rename: { suffix: '-800_2x', extname: '.webp' }
-              },
-              {
-                width: 800,
-                rename: { suffix: '-800_2x', extname: '.jpg' }
+                width: 300,
+                quality: 40,
+                rename: { suffix: '-300', extname: '.png' }
               }
             ]
           },
           {
-            quality: 60,
             progressive: true,
             withMetadata: false
           }
@@ -240,53 +237,41 @@ gulp.task('sw:dist', () => {
 
 // Generate a service worker
 gulp.task('service-worker', () => {
-  //returns a promise
-  return workboxBuild.generateSW({
-    globDirectory: 'dist',
-    globPatterns: ['**/*.{html,json,js,css}'],
-    swDest: 'dist/sw.js',
-    //Defines runtime caching rules:
-    runtimeCaching: [
-      {
-        urlPattern: /\.(?:png|jpg|webp)$/,
-        // Apply a cache-first strategy
-        handler: 'cacheFirst',
-        options: {
-          // custom cache name
-          cacheName: 'img',
-          // Only cache 12 images
-          expiration: {
-            maxEntries: 49 // arbitrary...
+  return workboxBuild
+    .generateSW({
+      globDirectory: 'dist',
+      swDest: 'dist/sw.js',
+      globPatterns: ['**/*.{html, json, js, css, png, webp}'],
+      // store content requests at runtime
+      runtimeCaching: [
+        {
+          urlPattern: /\.(?:png|jpg|webp)$/,
+          // Apply a cache-first strategy
+          handler: 'cacheFirst',
+          options: {
+            // custom cache name
+            cacheName: 'img',
+            // Limit to cache images
+            expiration: {
+              maxEntries: 49 // arbitrary...
+            }
           }
         }
-      }
-    ]
-  });
+      ]
+    })
+    .then(resources => {
+      console.log(
+        `Injected ${resources.count} resouces for precaching,` +
+          `totaling ${resources.size} bytes.`
+      );
+    })
+    .catch(err => {
+      console.log(`Failed with error: ${err}`);
+    });
 });
 
 gulp.task('service-temp', () => {
-  //returns a promise
-  return workboxBuild.generateSW({
-    globDirectory: '.tmp',
-    globPatterns: ['**/*.{html,json,js,css}'],
-    swDest: '.tmp/sw.js',
-    //Defines runtime caching rules:
-    runtimeCaching: [
-      {
-        urlPattern: /\.(?:png|jpg|webp)$/,
-        // Apply a cache-first strategy
-        handler: 'cacheFirst',
-        options: {
-          // custom cache name
-          cacheName: 'img',
-          // Only cache 12 images
-          expiration: {
-            maxEntries: 49 // arbitrary...
-          }
-        }
-      }
-    ]
-  });
+  return gulp.src('src/sw.js').pipe(gulp.dest('.tmp/'));
 });
 
 // Copy web manifest

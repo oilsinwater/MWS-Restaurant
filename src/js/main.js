@@ -1,6 +1,14 @@
-let restaurants, neighborhoods, cuisines; /* eslint-disable-line no-alert */
-var map; /* eslint-disable-line no-alert */
-var markers = []; /* eslint-disable-line no-alert */
+// let restaurants, neighborhoods, cuisines; /* eslint-disable-line no-alert */
+// var map; /* eslint-disable-line no-alert */
+// var markers = []; /* eslint-disable-line no-alert */
+const state = {
+  restaurants: [],
+  neighborhoods: [],
+  cuisines: [],
+  markers: [],
+  interactive: false
+};
+let map;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -19,7 +27,7 @@ const fetchNeighborhoods = () => {
       // Got an error
       console.error(error);
     } else {
-      self.neighborhoods = neighborhoods;
+      state.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();
     }
   });
@@ -28,7 +36,7 @@ const fetchNeighborhoods = () => {
 /**
  * Set neighborhoods HTML.
  */
-const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
+const fillNeighborhoodsHTML = (neighborhoods = state.neighborhoods) => {
   const select = document.getElementById('neighborhoods-select');
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
@@ -47,7 +55,7 @@ const fetchCuisines = () => {
       // Got an error!
       console.error(error);
     } else {
-      self.cuisines = cuisines;
+      state.cuisines = cuisines;
       fillCuisinesHTML();
     }
   });
@@ -56,7 +64,7 @@ const fetchCuisines = () => {
 /**
  * Set cuisines HTML.
  */
-const fillCuisinesHTML = (cuisines = self.cuisines) => {
+const fillCuisinesHTML = (cuisines = state.cuisines) => {
   const select = document.getElementById('cuisines-select');
 
   cuisines.forEach(cuisine => {
@@ -95,7 +103,7 @@ const fillCuisinesHTML = (cuisines = self.cuisines) => {
 /**
  * Initialize Google map, called from HTML.
  */
-const initMap = () => {
+window.initMap = () => {
   let loc = {
     lat: 40.722216,
     lng: -73.987501
@@ -141,20 +149,20 @@ const updateRestaurants = () => {
  */
 const resetRestaurants = restaurants => {
   // Remove all restaurants
-  self.restaurants = [];
+  state.restaurants = [];
   const ul = document.getElementById('restaurants-list');
   ul.innerHTML = '';
 
   // Remove all map markers
-  self.markers.forEach(m => m.setMap(null));
-  self.markers = [];
-  self.restaurants = restaurants;
+  state.markers.forEach(m => m.setMap(null));
+  state.markers = [];
+  state.restaurants = restaurants;
 };
 
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
-const fillRestaurantsHTML = (restaurants = self.restaurants) => {
+const fillRestaurantsHTML = (restaurants = state.restaurants) => {
   const ul = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
@@ -230,12 +238,10 @@ const createRestaurantHTML = restaurant => {
 
   setAtrributes(image, {
     alt: imgTxt,
-    className: 'lazyload',
+    className: 'restaurant-img',
     src: DBHelper.imageUrlForRestaurant(restaurant),
-    'data-src': DBHelper.imageUrlForRestaurant(restaurant),
-    'data-srcset': DBHelper.imageSrcsetForHome(restaurant),
-    sizes:
-      '(min-width: 300px) 250px, (min-width: 425px) 400px, (min-width: 635px) 600px, (min-width: 636px) 400px',
+    srcset: DBHelper.imageSrcsetForRestaurant(restaurant),
+    sizes: DBHelper.imageSizesForRestaurant(restaurant),
     title: imgTxt
   });
   li.append(image);
@@ -261,13 +267,13 @@ const createRestaurantHTML = restaurant => {
 /**
  * Add markers for current restaurants to the map.
  */
-const addMarkersToMap = (restaurants = self.restaurants) => {
+const addMarkersToMap = (restaurants = state.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
+    const marker = DBHelper.mapMarkerForRestaurant(restaurant, map);
     google.maps.event.addListener(marker, 'click', () => {
       window.location.href = marker.url;
     });
-    self.markers.push(marker);
+    state.markers.push(marker);
   });
 };

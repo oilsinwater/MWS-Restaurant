@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "production": "gulp clear:dist && gulp serve:dist",
-    "dev": "gulp clear && gulp serve",
+    "production": "gulp clear:dist && workbox generateSW workbox-config.js && gulp serve:dist",
+    "dev": "gulp clear && workbox generateSW workbox-config.js && gulp serve",
     "clear": "gulp clear:dist && gulp clear"
   },
   "repository": {
@@ -19,7 +19,12 @@
     "url": "https://github.com/oilsinwater/mws-restaurant/issues"
   },
   "homepage": "https://github.com/oilsinwater/mws-restaurant#readme",
-  "dependencies": {},
+  "dependencies": {
+    "google-maps": "^3.3.0",
+    "idb": "^2.1.3",
+    "workbox-build": "^3.6.3",
+    "workbox-cli": "^3.6.3"
+  },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
@@ -47,13 +52,11 @@
     "gulp-uglify-es": "^1.0.4",
     "gulp-useref": "^3.1.6",
     "gulp-util": "^3.0.8",
-    "idb": "^2.1.3",
     "imagemin-pngquant": "^6.0.0",
     "lazypipe": "^1.0.1",
     "run-sequence": "^2.2.1",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0",
-    "workbox-build": "^3.6.3"
+    "vinyl-source-stream": "^2.0.0"
   },
   "keywords": []
 }
