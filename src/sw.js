@@ -105,7 +105,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/main.js",
-    "revision": "ac24dbccc64ff3854d78fbb9383d98d1"
+    "revision": "386e2ba2f05b89434c7667c4cb53eb94"
   },
   {
     "url": "js/register.js",
@@ -113,7 +113,7 @@ self.__precacheManifest = [
   },
   {
     "url": "js/restaurant_info.js",
-    "revision": "5d7d36e8bf5f95c27cec0e5ddaf8e8fa"
+    "revision": "9118b3be951e014a84f245d8223d07fd"
   },
   {
     "url": "manifest.json",

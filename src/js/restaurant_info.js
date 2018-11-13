@@ -54,11 +54,17 @@ const fetchRestaurantFromURL = callback => {
 const fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   const address = document.getElementById('restaurant-address');
-  const cuisine = document.getElementById('restaurant-cuisine');
   const image = document.getElementById('restaurant-img');
-  const imgTxt = `${restaurant.name} restaurant, in the neighborhood of ${
-    restaurant.neighborhood
-  }`;
+  const cuisine = document.getElementById('restaurant-cuisine');
+  const imgTxt =
+    restaurant.name +
+    ' restaurant in the neighborhood of ' +
+    restaurant.neighborhood +
+    '.';
+
+  name.innerHTML = restaurant.name;
+  address.innerHTML = restaurant.address;
+  cuisine.innerHTML = restaurant.cuisine_type;
 
   function setAtrributes(el, attrs) {
     for (let key in attrs) {
@@ -74,11 +80,6 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
     sizes: DBHelper.imageSizesForRestaurant(restaurant),
     title: imgTxt
   });
-  li.append(image);
-
-  name.innerHTML = restaurant.name;
-  address.innerHTML = restaurant.address;
-  cuisine.innerHTML = restaurant.cuisine_type;
 
   // fill operating hours
   if (restaurant.operating_hours) {

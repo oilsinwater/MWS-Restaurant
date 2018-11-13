@@ -213,10 +213,6 @@ const fillRestaurantsHTML = (restaurants = state.restaurants) => {
 // };
 
 /**
- * Set HTML attributes
- */
-
-/**
  * Create restaurant HTML.
  */
 const createRestaurantHTML = restaurant => {
