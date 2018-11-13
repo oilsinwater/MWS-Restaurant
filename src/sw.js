@@ -93,7 +93,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "2afa017e25b3be1527fae8b586d4fe8a"
+    "revision": "cd59a89cec817513434fd17725d53407"
   },
   {
     "url": "js/dbhelper.1.js",
@@ -101,11 +101,11 @@ self.__precacheManifest = [
   },
   {
     "url": "js/dbhelper.js",
-    "revision": "f2f753b0ff1b14c8bd22f28bb5c3d123"
+    "revision": "3da1c3acfee0eec6496629524c166a9b"
   },
   {
     "url": "js/main.js",
-    "revision": "386e2ba2f05b89434c7667c4cb53eb94"
+    "revision": "bba22dbd4675fac8c323b91938371d00"
   },
   {
     "url": "js/register.js",
@@ -121,7 +121,7 @@ self.__precacheManifest = [
   },
   {
     "url": "restaurant.html",
-    "revision": "b269b20936897aa5a330cfffb44f20de"
+    "revision": "196d8054e66cfa8023b2148a22ce88cc"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();

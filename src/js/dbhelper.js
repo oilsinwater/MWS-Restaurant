@@ -203,7 +203,7 @@ class DBHelper {
   }
 
   static imageSizesForRestaurant(restaurant) {
-    return `(max-width: 360px) 280px,
+    return `(max-width: 360px) 300px,
     (max-width: 600px) 600px,
     800px`;
   }
