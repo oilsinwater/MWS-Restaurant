@@ -3,7 +3,8 @@
  */
 
 // Load plugins
-let gulp = require('gulp');
+import gulp from 'gulp';
+// let gulp = require('gulp');
 let gulpLoadPlugins = require('gulp-load-plugins');
 let del = require('del');
 let browserSync = require('browser-sync').create();
