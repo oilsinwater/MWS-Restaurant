@@ -184,8 +184,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    let url = `/img/${restaurant.photograph.split('.')[0] ||
-      restaurant.id}-300.png`;
+    let url = `/img/${restaurant.photograph || restaurant.id}-300.png`;
     return url;
   }
 
@@ -195,17 +194,16 @@ class DBHelper {
 
   static imageSrcsetForRestaurant(restaurant) {
     // return `${restaurant.photograph}`;
-    const imgSrc = `/img/${restaurant.photograph.split('.')[0] ||
-      restaurant.id}`;
+    const imgSrc = `/img/${restaurant.photograph || restaurant.id}`;
     return `${imgSrc}-300.png 300w,
     ${imgSrc}-600.png 600w,
     ${imgSrc}-800.png 800w`;
   }
 
   static imageSizesForRestaurant(restaurant) {
-    return `(max-width: 360px) 300px,
+    return `(max-width: 360px) 280px,
     (max-width: 600px) 600px,
-    800px`;
+    400px`;
   }
   /**
    * Reviews image srcset
@@ -228,17 +226,15 @@ class DBHelper {
         url: DBHelper.urlForRestaurant(restaurant)
       }
     );
-    marker.addTo(newMap);
+    marker.addTo(map);
     return marker;
   }
-  // static mapMarkerForRestaurant(restaurant, map) {
-  //   const marker = new google.maps.Marker({
-  //     position: restaurant.latlng,
-  //     title: restaurant.name,
-  //     url: DBHelper.urlForRestaurant(restaurant),
-  //     map: map,
-  //     animation: google.maps.Animation.DROP
-  //   });
-  //   return marker;
-  // }
+  //https://alexandroperez.github.io/mws-walkthrough/
+  static mapOffline() {
+    const map = document.getElementById('map');
+    map.className = 'map-offline';
+    map.innerHTML = `<div class="warning-icon">!</div>
+    <div class="warning-message">Maps is haven't trouble loading..</div>
+    <div class="warning-suggestion">You appear to be offline. To access maps, connect to a network.</div>`;
+  }
 }

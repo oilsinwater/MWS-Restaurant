@@ -74,23 +74,7 @@ gulp.task('images', ['unaltered'], () => {
                 quality: 70,
                 rename: {
                   suffix: '-800',
-                  extname: '.webp'
-                }
-              },
-              {
-                width: 800,
-                quality: 70,
-                rename: {
-                  suffix: '-800',
                   extname: '.png'
-                }
-              },
-              {
-                width: 600,
-                quality: 50,
-                rename: {
-                  suffix: '-600',
-                  extname: '.webp'
                 }
               },
               {
@@ -100,11 +84,6 @@ gulp.task('images', ['unaltered'], () => {
                   suffix: '-600',
                   extname: '.png'
                 }
-              },
-              {
-                width: 300,
-                quality: 40,
-                rename: { suffix: '-300', extname: '.webp' }
               },
               {
                 width: 300,
