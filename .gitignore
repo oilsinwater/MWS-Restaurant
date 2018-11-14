@@ -12,6 +12,9 @@ node_modules/
 /dist
 /.tmp
 
+# MapBox API keys
+src/js/secret.js
+
 # ignore logs 
 logs
 *.log

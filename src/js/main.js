@@ -1,14 +1,8 @@
-// let restaurants, neighborhoods, cuisines; /* eslint-disable-line no-alert */
-// var map; /* eslint-disable-line no-alert */
-// var markers = []; /* eslint-disable-line no-alert */
-const state = {
-  restaurants: [],
-  neighborhoods: [],
-  cuisines: [],
-  markers: [],
-  interactive: false
-};
-let newMap;
+let restaurants;
+let neighborhoods;
+let cuisines;
+var markers = [];
+var newMap;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -28,7 +22,7 @@ const fetchNeighborhoods = () => {
       // Got an error
       console.error(error);
     } else {
-      state.neighborhoods = neighborhoods;
+      self.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();
     }
   });
@@ -37,7 +31,7 @@ const fetchNeighborhoods = () => {
 /**
  * Set neighborhoods HTML.
  */
-const fillNeighborhoodsHTML = (neighborhoods = state.neighborhoods) => {
+const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
   const select = document.getElementById('neighborhoods-select');
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
@@ -56,7 +50,7 @@ const fetchCuisines = () => {
       // Got an error!
       console.error(error);
     } else {
-      state.cuisines = cuisines;
+      self.cuisines = cuisines;
       fillCuisinesHTML();
     }
   });
@@ -65,7 +59,7 @@ const fetchCuisines = () => {
 /**
  * Set cuisines HTML.
  */
-const fillCuisinesHTML = (cuisines = state.cuisines) => {
+const fillCuisinesHTML = (cuisines = self.cuisines) => {
   const select = document.getElementById('cuisines-select');
 
   cuisines.forEach(cuisine => {
@@ -79,24 +73,30 @@ const fillCuisinesHTML = (cuisines = state.cuisines) => {
 /**
  * Initialize leaflet map, called from HTML.
  */
-initMap = () => {
-  self.newMap = L.map('map', {
-    center: [40.722216, -73.987501],
-    zoom: 12,
-    scrollWheelZoom: false
-  });
-  L.tileLayer(
-    'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}',
-    {
-      mapboxToken: '<your MAPBOX API KEY HERE>',
-      maxZoom: 18,
-      attribution:
-        'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      id: 'mapbox.streets'
+const initMap = () => {
+  if (navigator.onLine) {
+    try {
+      newMap = L.map('map', {
+        center: [40.722216, -73.987501],
+        zoom: 12,
+        scrollWheelZoom: false
+      });
+      L.tileLayer(
+        'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}',
+        {
+          mapboxToken: SECRET.mapbox_key,
+          maxZoom: 18,
+          attribution:
+            'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          id: 'mapbox.streets'
+        }
+      ).addTo(newMap);
+    } catch (error) {
+      console.log("Map couldn't be initialized", error);
     }
-  ).addTo(newMap);
+  }
 
   updateRestaurants();
 };
@@ -150,20 +150,20 @@ const updateRestaurants = () => {
  */
 const resetRestaurants = restaurants => {
   // Remove all restaurants
-  state.restaurants = [];
+  self.restaurants = [];
   const ul = document.getElementById('restaurants-list');
   ul.innerHTML = '';
 
   // Remove all map markers
-  state.markers.forEach(m => m.setMap(null));
-  state.markers = [];
-  state.restaurants = restaurants;
+  self.markers.forEach(m => m.setMap(null));
+  self.markers = [];
+  self.restaurants = restaurants;
 };
 
 /**
  * Create all restaurants HTML and add them to the webpage.
  */
-const fillRestaurantsHTML = (restaurants = state.restaurants) => {
+const fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
@@ -224,24 +224,25 @@ const createRestaurantHTML = restaurant => {
  */
 
 const addMarkersToMap = (restaurants = self.restaurants) => {
+  // restaurants.forEach(restaurant => {
+  //   // Add marker to the map
+  //   const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
+  //   marker.on('click', onClick);
+  //   function onClick() {
+  //     window.location.href = marker.options.url;
+  //   }
+  //   self.markers.push(marker);
+  // });
+
+  // if either newMap or L (leaflet) aren't defined exit early.
+  if (!newMap || !L) return;
   restaurants.forEach(restaurant => {
     // Add marker to the map
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
-    marker.on("click", onClick);
+    marker.on('click', onClick);
     function onClick() {
       window.location.href = marker.options.url;
     }
     self.markers.push(marker);
   });
-
-
-  /* addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
-    self.markers.push(marker);
-  });
-} */
+};

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "production": "gulp clear:dist && workbox generateSW workbox-config.js && gulp serve:dist",
-    "dev": "gulp clear && workbox generateSW workbox-config.js && gulp serve",
+    "production": "gulp clear:dist && gulp serve:dist",
+    "dev": "gulp clear && gulp serve",
     "clear": "gulp clear:dist && gulp clear"
   },
   "repository": {

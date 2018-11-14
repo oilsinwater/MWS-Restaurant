@@ -1,15 +1,18 @@
 @charset "utf-8";
+/* CSS Document */
+
 /* Declaring variables for dynamic control of scope */
 :root {
-  /* layout */
+          /* layout */
   --arr: wrap;
   --obj: flex;
   --place: center;
-  --x-axis: 100vw;
+  --x-axis: 100%;
   --y-axis: 50rem;
   --z-axis: initial;
   --gutter: var(--fluid-font-1);
-  /* color scheme */
+  --empty: none;
+          /* color scheme */
   --black: #000000;
   --white: rgb(255, 255, 255);
   --blue: #7ebffc;
@@ -20,7 +23,7 @@
   --pink: #ea7086;
   --green: #daf0cd;
   --orange: #e84d14;
-  /* type */
+        /* type */
   --fluid-font-1: 1rem;
   --fluid-font-2: 1.2rem;
   --fluid-font-3: 1.44rem;
@@ -39,7 +42,6 @@ body {
   position: relative;
   white-space: normal;
   background-color: var(--white);
-  width: 100%;
   margin: 0px;
   padding: 0px;
   overflow-x: hidden;
@@ -63,12 +65,12 @@ li {
 }
 a {
   color: var(--orange);
-  text-decoration: none;
+  text-decoration: var(--empty);
 }
 a:hover,
 a:focus {
   color: var(--reg-blue);
-  text-decoration: none;
+  text-decoration: var(--empty);
 }
 a img {
   border: none 0px var(--white);
@@ -84,9 +86,6 @@ h5,
 h6 {
   font-family: var(--serif, Georgia);
   margin: 0 0 20px;
-}
-img {
-  border-radius: 50px;
 }
 article,
 aside,
@@ -155,10 +154,13 @@ nav h1 a {
   text-transform: var(--case);
   text-align: var(--place);
 }
+
 /* ====================== Map ====================== */
+
 #map {
   display: flow-root;
-  height: 400px;
+  max-height: 400px;
+  height: 80vw;
   width: 100%;
   background-color: var(--white);
   margin: 0;
@@ -167,8 +169,11 @@ nav h1 a {
 }
 .inside #map-container {
   display: flow-root;
+  height: 70vw;
+  max-height: 400px;
   padding: 0;
   overflow-x: hidden;
+  position: static;
   width: 100%;
   clear: both;
 }
@@ -246,12 +251,8 @@ nav h1 a {
   text-align: var(--place: left);
   border-radius: 50px;
 }
-#restaurants-list .lazy-load {
-  background-color: var(--light-grey);
-  display: block;
-  margin: 0;
-  max-width: 100%;
-  min-height: auto;
+#restaurants-list li img {
+  border-radius: 50px;
 }
 #restaurants-list li h1 {
   color: var(--white);
@@ -280,18 +281,23 @@ nav h1 a {
   margin: 15px 0 0;
   padding: 8px 30px 10px;
   text-align: var(--place);
-  text-decoration: none;
+  text-decoration: var(--empty);
 }
 #restaurant-name {
   text-align: var(--place);
 }
+
 /* ====================== Media queries ====================== */
+
+
 @media screen and (min-width: 621px) {
-  /* ====================== Navigation ====================== */
+
+/* [ NAVIGATION ] */
   nav h1 a {
     letter-spacing: 20px;
   }
-  /* ====================== Restaurant Filtering ====================== */
+/* [ RESTAURANT FILTERS ] */
+
   .filter-options {
     width: 100%;
     height: auto;
@@ -391,7 +397,7 @@ nav h1 a {
     margin: 15px 0 0;
     padding: 8px 30px 10px;
     text-align: var(--place);
-    text-decoration: none;
+    text-decoration: var(--empty);
   }
   #restaurant-name {
     text-align: var(--place);
