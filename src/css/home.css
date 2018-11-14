@@ -286,6 +286,17 @@ nav h1 a {
 #restaurant-name {
   text-align: var(--place);
 }
+.skip-link {
+  display: block;
+  position: absolute;
+  top: 15px;
+  left: -1000px;
+  background-color: white;
+  padding: 5px 10px;
+}
+.skip-link:focus {
+  left: 15px;
+}
 
 /* ====================== Media queries ====================== */
 
