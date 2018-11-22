@@ -191,7 +191,6 @@ class DBHelper {
   /**
    * Homepage image srcset
    */
-
   static imageSrcsetForRestaurant(restaurant) {
     // return `${restaurant.photograph}`;
     const imgSrc = `/img/${restaurant.photograph || restaurant.id}`;
@@ -205,10 +204,10 @@ class DBHelper {
     (max-width: 600px) 600px,
     400px`;
   }
+
   /**
    * Reviews image srcset
    */
-
   static imageSrcsetForReviews(restaurant) {
     return `${restaurant.srcset_restaurant}`;
   }
