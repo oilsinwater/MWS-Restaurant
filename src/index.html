@@ -74,12 +74,24 @@
     </a> All Rights Reserved.
   </footer>
   <!-- Ends footer -->
+
+  <script async defer src="https://cdnjs.cloudflare.com/ajax/libs/dexie/2.0.4/dexie.min.js"></script>
+  <script async defer src='https://cdn.jsdelivr.net/npm/dexie-observable@1.0.0-beta.5/dist/dexie-observable.min.js'></script>
+  
+  <!-- build:js js/dexie-syncable.min.js -->
+  <script async defer src='js/dexie-synchable.js'></script>
+  <!-- endbuild -->
+
+  <script async defer src="js/WebSocketSyncProtocol.js"></script>
+
   <!-- build:js js/main.min.js -->
   <script async defer src="js/dbhelper.js"></script>
+  <script async defer src='js/storage.js'></script>
   <script async defer src="js/register.js"></script>
   <script async defer src="js/secret.js"></script>
   <script async defer src="js/main.js"></script>
   <!-- endbuild -->
+  
   <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKNb-anVS2GiIBK2uFRtU2-5S1zTRyilM&libraries=places&callback=initMap"></script> -->
 </body>
 

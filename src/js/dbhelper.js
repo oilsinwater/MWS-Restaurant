@@ -1,6 +1,7 @@
 /**
  * Common database helper functions.
  */
+
 class DBHelper {
   // eslint-disable-line no-unused-vars
   /**

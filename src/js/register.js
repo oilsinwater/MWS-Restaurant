@@ -1,4 +1,4 @@
-let registerWorker = () => {
+const registerWorker = () => {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(
       () => {

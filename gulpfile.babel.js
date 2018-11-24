@@ -15,7 +15,8 @@ let runSequence = require('run-sequence');
 let lazypipe = require('lazypipe');
 let pngquant = require('imagemin-pngquant');
 let imagemin = require('gulp-imagemin');
-let workboxBuild = require('workbox-build');
+// let workboxBuild = require('workbox-build');
+import workboxBuild from 'workbox-build';
 
 let $ = gulpLoadPlugins();
 let reload = browserSync.reload;
@@ -274,6 +275,7 @@ gulp.task('serve', () => {
       'html',
       'service-temp',
       'sw',
+      'websync',
       'manifest',
       'neck'
     ],
@@ -291,6 +293,19 @@ gulp.task('serve', () => {
       gulp.watch(['src/manifest.json'], ['manifest', reload]);
     }
   );
+});
+
+// Copy web socket sync
+gulp.task('websync', () => {
+  return gulp
+    .src('src/js/WebSocketSyncProtocol.js')
+    .pipe(gulp.dest('.tmp/js/'));
+});
+
+gulp.task('websync:dist', () => {
+  return gulp
+    .src('src/js/WebSocketSyncProtocol.js')
+    .pipe(gulp.dest('dist/js/'));
 });
 
 // Bundle and serve the optimized site
@@ -317,6 +332,7 @@ gulp.task('default', ['clear:dist'], done => {
       'images',
       'lint',
       'html:dist',
+      'websync:dist',
       'service-worker',
       'sw:dist',
       'manifest:dist',
