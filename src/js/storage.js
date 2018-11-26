@@ -1,9 +1,8 @@
-// import idb from 'idb';
-import Dexie from 'dexie';
-import 'dexie-observable';
-import 'dexie-syncable';
-import './WebSocketSyncProtocol';
-let db;
+// // import idb from 'idb';
+// import Dexie from 'dexie';
+// import 'dexie-observable';
+// import 'dexie-syncable';
+// import './WebSocketSyncProtocol';
 
 // const dbPromise = {
 //   // creation and updating of database happens here.

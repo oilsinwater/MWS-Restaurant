@@ -1,0 +1,23 @@
+CACHE MANIFEST
+# MWS-Restaurants:v1
+
+CACHE:
+# Explicity cached MAIN FILES
+css/home.css
+css/reviews.css
+img/unaltered/favicon.ico
+js/dexie-syncable.min.js
+js/main.min.js
+js/restaurant.min.js
+js/WebSocketSyncProtocol.js
+index.html
+restaurant.html
+manifest.json
+sw.js
+
+NETWORK:
+*
+
+FALLBACK:
+/ /offline.html
+/img/unaltered/offline.png

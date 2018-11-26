@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" manifest="manifest.appcache">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Udacity Mobile Web Specialist Restaurant Project"
+    />
+    <meta name="viewport" content="width=device-width,intial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <!-- Normalizes elements more consistently across browsers -->
+    <link
+      rel="stylesheet"
+      src="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"
+    />
+    <!-- build:css css/home.css -->
+    <link rel="stylesheet" href="css/home.css" />
+    <!-- endbuild -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
+      integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+      crossorigin=""
+    />
+    <link rel="manifest" href="manifest.json" />
+    <link
+      rel="shortcut icon"
+      href="img/unaltered/favicon.ico"
+      type="image/x-icon"
+    />
+    <link rel="icon" href="img/unaltered/favicon.ico" type="image/x-icon" />
+
+    <!-- Main Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Libre+Franklin|Noto+Serif+JP"
+      rel="stylesheet"
+    />
+    <!-- Links to servicework for offline cachinng -->
+    <title>Restaurant Reviews</title>
+  </head>
+
+  <body>
+    <!-- Begins header -->
+    <header>
+      <a href="#filter-options" class="skip-link">Skip to main content</a>
+      <nav>
+        <h1><a tabindex="-1" href="/">Restaurant Reviews</a></h1>
+      </nav>
+    </header>
+    <!-- Ends header -->
+
+    <!-- Beginning main -->
+    <main id="maincontent">
+      <section role="contentinfo" aria-label="Offline landing page">
+        <h2>Device is disconnected from network</h2>
+      </section>
+    </main>
+    <!-- End main -->
+
+    <!-- Beginning footer -->
+    <footer id="footer" role="contentinfo">
+      Copyright (c) 2017
+      <a href="/"> <strong>Restaurant Reviews</strong> </a> All Rights Reserved.
+    </footer>
+    <!-- Ends footer -->
+
+    <script
+      async
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/dexie/2.0.4/dexie.min.js"
+    ></script>
+    <script
+      async
+      defer
+      src="https://cdn.jsdelivr.net/npm/dexie-observable@1.0.0-beta.5/dist/dexie-observable.min.js"
+    ></script>
+
+    <!-- build:js js/dexie-syncable.min.js -->
+    <script async defer src="js/dexie-synchable.js"></script>
+    <!-- endbuild -->
+
+    <script async defer src="js/WebSocketSyncProtocol.js"></script>
+
+    <!-- build:js js/main.min.js -->
+    <script async defer src="js/dbhelper.js"></script>
+    <script async defer src="js/storage.js"></script>
+    <script async defer src="js/register.js"></script>
+    <script async defer src="js/secret.js"></script>
+    <script async defer src="js/main.js"></script>
+    <!-- endbuild -->
+
+    <!--
+      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKNb-anVS2GiIBK2uFRtU2-5S1zTRyilM&libraries=places&callback=initMap"></script>
+    -->
+  </body>
+</html>

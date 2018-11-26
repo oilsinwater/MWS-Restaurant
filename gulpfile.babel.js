@@ -270,6 +270,7 @@ gulp.task('serve', () => {
     [
       'start',
       'clear',
+      'appcache',
       'images',
       'lint',
       'html',
@@ -308,6 +309,15 @@ gulp.task('websync:dist', () => {
     .pipe(gulp.dest('dist/js/'));
 });
 
+// Copy web socket sync
+gulp.task('appcache', () => {
+  return gulp.src('src/appcache.manifest').pipe(gulp.dest('.tmp/'));
+});
+
+gulp.task('appcache:dist', () => {
+  return gulp.src('src/appcache.manifest').pipe(gulp.dest('dist/'));
+});
+
 // Bundle and serve the optimized site
 gulp.task('serve:dist', ['default'], () => {
   browserSync.init({
@@ -329,6 +339,7 @@ gulp.task('default', ['clear:dist'], done => {
     [
       'start',
       'clear',
+      'appcache:dist',
       'images',
       'lint',
       'html:dist',
