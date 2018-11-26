@@ -6,7 +6,7 @@
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
-let bs = require('browser-sync').create();
+const bs = require('browser-sync').create();
 import browserify from 'browserify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
@@ -274,6 +274,8 @@ gulp.task('ssl:dist', () => {
   return gulp.src('src/ssl/**').pipe(gulp.dest('dist/ssl/'));
 });
 
+//
+
 // Watch changes and reload
 gulp.task('serve', () => {
   runSequence(
@@ -293,8 +295,14 @@ gulp.task('serve', () => {
     ],
     () => {
       bs.init({
+        browser: 'google chrome',
+        loglevel: 'debug',
         server: '.tmp',
-        port: 3030
+        port: 3030,
+        https: {
+          key: 'dist/ssl/mwsrestaurants.com.key',
+          cert: 'dist/ssl/mwsrestaurants.com.crt'
+        }
       });
       // watch
       gulp.watch(['src/*.html'], ['html', reload]);
