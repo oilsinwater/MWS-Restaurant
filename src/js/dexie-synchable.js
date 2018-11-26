@@ -24,8 +24,8 @@ import 'dexie-observable';
   typeof exports === 'object' && typeof module !== 'undefined'
     ? (module.exports = factory(require('dexie'), require('dexie-observable')))
     : typeof define === 'function' && define.amd
-    ? define(['dexie', 'dexie-observable'], factory)
-    : ((global.Dexie = global.Dexie || {}),
+      ? define(['dexie', 'dexie-observable'], factory)
+      : ((global.Dexie = global.Dexie || {}),
       (global.Dexie.Syncable = factory(global.Dexie)));
 })(this, function(Dexie) {
   'use strict';
@@ -127,7 +127,7 @@ import 'dexie-observable';
             // reject promise with InvalidStateError
             reject(
               new Dexie.InvalidStateError(
-                "Dexie.Syncable: Couldn't connect. Database failed to open",
+                'Dexie.Syncable: Couldn\'t connect. Database failed to open',
                 ex
               )
             );
@@ -344,8 +344,8 @@ import 'dexie-observable';
               }),
               specifyKeys
                 ? createChangesToApply.map(function(c) {
-                    return c.key;
-                  })
+                  return c.key;
+                })
                 : undefined
             );
           if (updateChangesToApply.length > 0)
@@ -513,36 +513,36 @@ import 'dexie-observable';
 
   function mergeChange(prevChange, nextChange) {
     switch (prevChange.type) {
+    case CREATE:
+      switch (nextChange.type) {
       case CREATE:
-        switch (nextChange.type) {
-          case CREATE:
-            return nextChange; // Another CREATE replaces previous CREATE.
-          case UPDATE:
-            return combineCreateAndUpdate(prevChange, nextChange); // Apply nextChange.mods into prevChange.obj
-          case DELETE:
-            return nextChange; // Object created and then deleted. If it wasnt for that we MUST handle resent changes, we would skip entire change here. But what if the CREATE was sent earlier, and then CREATE/DELETE at later stage? It would become a ghost object in DB. Therefore, we MUST keep the delete change! If object doesnt exist, it wont harm!
-        }
-        break;
+        return nextChange; // Another CREATE replaces previous CREATE.
       case UPDATE:
-        switch (nextChange.type) {
-          case CREATE:
-            return nextChange; // Another CREATE replaces previous update.
-          case UPDATE:
-            return combineUpdateAndUpdate(prevChange, nextChange); // Add the additional modifications to existing modification set.
-          case DELETE:
-            return nextChange; // Only send the delete change. What was updated earlier is no longer of interest.
-        }
-        break;
+        return combineCreateAndUpdate(prevChange, nextChange); // Apply nextChange.mods into prevChange.obj
       case DELETE:
-        switch (nextChange.type) {
-          case CREATE:
-            return nextChange; // A resurection occurred. Only create change is of interest.
-          case UPDATE:
-            return prevChange; // Nothing to do. We cannot update an object that doesnt exist. Leave the delete change there.
-          case DELETE:
-            return prevChange; // Still a delete change. Leave as is.
-        }
-        break;
+        return nextChange; // Object created and then deleted. If it wasnt for that we MUST handle resent changes, we would skip entire change here. But what if the CREATE was sent earlier, and then CREATE/DELETE at later stage? It would become a ghost object in DB. Therefore, we MUST keep the delete change! If object doesnt exist, it wont harm!
+      }
+      break;
+    case UPDATE:
+      switch (nextChange.type) {
+      case CREATE:
+        return nextChange; // Another CREATE replaces previous update.
+      case UPDATE:
+        return combineUpdateAndUpdate(prevChange, nextChange); // Add the additional modifications to existing modification set.
+      case DELETE:
+        return nextChange; // Only send the delete change. What was updated earlier is no longer of interest.
+      }
+      break;
+    case DELETE:
+      switch (nextChange.type) {
+      case CREATE:
+        return nextChange; // A resurection occurred. Only create change is of interest.
+      case UPDATE:
+        return prevChange; // Nothing to do. We cannot update an object that doesnt exist. Leave the delete change there.
+      case DELETE:
+        return prevChange; // Still a delete change. Leave as is.
+      }
+      break;
     }
   }
 
@@ -1466,9 +1466,9 @@ import 'dexie-observable';
       } else {
         return Promise.reject(
           new Error(
-            "ISyncProtocol '" +
+            'ISyncProtocol \'' +
               protocolName +
-              "' is not registered in Dexie.Syncable.registerSyncProtocol()"
+              '\' is not registered in Dexie.Syncable.registerSyncProtocol()'
           )
         );
       }

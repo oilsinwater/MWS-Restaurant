@@ -4,22 +4,20 @@
 
 // Load plugins
 import gulp from 'gulp';
-// let gulp = require('gulp');
-let gulpLoadPlugins = require('gulp-load-plugins');
-let del = require('del');
-let browserSync = require('browser-sync').create();
-let browserify = require('browserify');
-let source = require('vinyl-source-stream');
-let buffer = require('vinyl-buffer');
-let runSequence = require('run-sequence');
-let lazypipe = require('lazypipe');
-let pngquant = require('imagemin-pngquant');
-let imagemin = require('gulp-imagemin');
-// let workboxBuild = require('workbox-build');
+import gulpLoadPlugins from 'gulp-load-plugins';
+import del from 'del';
+let bs = require('browser-sync').create();
+import browserify from 'browserify';
+import source from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
+import runSequence from 'run-sequence';
+import lazypipe from 'lazypipe';
+import pngquant from 'imagemin-pngquant';
+import imagemin from 'gulp-imagemin';
 import workboxBuild from 'workbox-build';
 
 let $ = gulpLoadPlugins();
-let reload = browserSync.reload;
+let reload = bs.reload;
 
 // lint
 gulp.task('lint', () => {
@@ -264,12 +262,25 @@ gulp.task('manifest:dist', () => {
   return gulp.src('src/manifest.json').pipe(gulp.dest('dist/'));
 });
 
+// Copy ssl files
+gulp.task('ssl', () => {
+  return gulp
+    .src('src/ssl/**')
+    .pipe(gulp.dest('dist/ssl'))
+    .pipe(gulp.dest('.tmp/ssl'));
+});
+
+gulp.task('ssl:dist', () => {
+  return gulp.src('src/ssl/**').pipe(gulp.dest('dist/ssl/'));
+});
+
 // Watch changes and reload
 gulp.task('serve', () => {
   runSequence(
     [
       'start',
       'clear',
+      'ssl',
       'appcache',
       'images',
       'lint',
@@ -281,7 +292,7 @@ gulp.task('serve', () => {
       'neck'
     ],
     () => {
-      browserSync.init({
+      bs.init({
         server: '.tmp',
         port: 3030
       });
@@ -294,6 +305,21 @@ gulp.task('serve', () => {
       gulp.watch(['src/manifest.json'], ['manifest', reload]);
     }
   );
+});
+
+// Bundle and serve the optimized site
+gulp.task('serve:dist', ['default'], () => {
+  bs.init({
+    server: 'dist',
+    port: 8000
+  });
+
+  gulp.watch(['src/*.html'], ['html:dist', reload]);
+  gulp.watch(['src/img/**'], ['images', reload]);
+  gulp.watch(['src/css/*.css'], ['html:dist', reload]);
+  gulp.watch(['src/js/*.js'], ['lint', 'html:dist', reload]);
+  gulp.watch(['src/sw.js'], ['lint', 'sw:dist', reload]);
+  gulp.watch(['src/manifest.json'], ['manifest:dist', reload]);
 });
 
 // Copy web socket sync
@@ -318,27 +344,13 @@ gulp.task('appcache:dist', () => {
   return gulp.src('src/appcache.manifest').pipe(gulp.dest('dist/'));
 });
 
-// Bundle and serve the optimized site
-gulp.task('serve:dist', ['default'], () => {
-  browserSync.init({
-    server: 'dist',
-    port: 8000
-  });
-
-  gulp.watch(['src/*.html'], ['html:dist', reload]);
-  gulp.watch(['src/img/**'], ['images', reload]);
-  gulp.watch(['src/css/*.css'], ['html:dist', reload]);
-  gulp.watch(['src/js/*.js'], ['lint', 'html:dist', reload]);
-  gulp.watch(['src/sw.js'], ['lint', 'sw:dist', reload]);
-  gulp.watch(['src/manifest.json'], ['manifest:dist', reload]);
-});
-
 // Build production files in order,
 gulp.task('default', ['clear:dist'], done => {
   runSequence(
     [
       'start',
       'clear',
+      'ssl:dist',
       'appcache:dist',
       'images',
       'lint',
