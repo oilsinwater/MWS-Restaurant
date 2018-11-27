@@ -272,14 +272,6 @@ gulp.task('ssl', () => {
     .pipe(gulp.dest('build/ssl'));
 });
 
-// Copy ssl files
-gulp.task('appcache', () => {
-  return gulp
-    .src('src/appcache.manifest')
-    .pipe(gulp.dest('dist/'))
-    .pipe(gulp.dest('build/'));
-});
-
 // Watch changes and reload
 gulp.task('serve', () => {
   runSequence(
@@ -287,7 +279,6 @@ gulp.task('serve', () => {
       'start',
       'clear',
       'ssl',
-      'appcache',
       'images',
       'lint',
       'html',
@@ -340,7 +331,6 @@ gulp.task('default', ['clear:dist'], done => {
       'start',
       'clear',
       'ssl',
-      'appcache',
       'images',
       'lint',
       'html:dist',
