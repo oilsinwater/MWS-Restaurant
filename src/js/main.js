@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+
 let restaurants;
 let neighborhoods;
 let cuisines;
@@ -94,7 +97,7 @@ const initMap = () => {
         }
       ).addTo(newMap);
     } catch (error) {
-      console.log("Map couldn't be initialized", error);
+      console.log('Map couldn\'t be initialized', error);
     }
   }
 

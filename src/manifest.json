@@ -1,8 +1,9 @@
 {
-  "name": "Udacity MWS Nanodegree Restaurant Project",
+  "name": "MWS Restaurants",
   "short_name": "Restaurants Reviews",
   "theme_color": "#000000",
   "background_color": "#dcedfd",
+  "description": "Udacity MWS Nanodegree Restaurant Project",
   "display": "standalone",
   "scope": "/",
   "start_url": "/index.html",

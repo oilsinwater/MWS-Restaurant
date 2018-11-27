@@ -6,7 +6,6 @@
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
-const bs = require('browser-sync').create();
 import browserify from 'browserify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
@@ -15,6 +14,8 @@ import lazypipe from 'lazypipe';
 import pngquant from 'imagemin-pngquant';
 import imagemin from 'gulp-imagemin';
 import workboxBuild from 'workbox-build';
+
+const bs = require('browser-sync').create();
 
 let $ = gulpLoadPlugins();
 let reload = bs.reload;
@@ -218,9 +219,10 @@ gulp.task('sw:dist', () => {
 gulp.task('service-worker', () => {
   return workboxBuild
     .generateSW({
+      cacheId: 'mwsrestaurants-reviews',
       globDirectory: 'dist',
       swDest: 'dist/sw.js',
-      globPatterns: ['**/*.{html, json, js, css, png, webp}'],
+      globPatterns: ['**/*.{css,json,jpg,ico,png,html,js,crt,key}'],
       // store content requests at runtime
       runtimeCaching: [
         {
@@ -283,13 +285,11 @@ gulp.task('serve', () => {
       'start',
       'clear',
       'ssl',
-      'appcache',
       'images',
       'lint',
       'html',
       'service-temp',
       'sw',
-      'websync',
       'manifest',
       'neck'
     ],
@@ -330,28 +330,6 @@ gulp.task('serve:dist', ['default'], () => {
   gulp.watch(['src/manifest.json'], ['manifest:dist', reload]);
 });
 
-// Copy web socket sync
-gulp.task('websync', () => {
-  return gulp
-    .src('src/js/WebSocketSyncProtocol.js')
-    .pipe(gulp.dest('.tmp/js/'));
-});
-
-gulp.task('websync:dist', () => {
-  return gulp
-    .src('src/js/WebSocketSyncProtocol.js')
-    .pipe(gulp.dest('dist/js/'));
-});
-
-// Copy web socket sync
-gulp.task('appcache', () => {
-  return gulp.src('src/appcache.manifest').pipe(gulp.dest('.tmp/'));
-});
-
-gulp.task('appcache:dist', () => {
-  return gulp.src('src/appcache.manifest').pipe(gulp.dest('dist/'));
-});
-
 // Build production files in order,
 gulp.task('default', ['clear:dist'], done => {
   runSequence(
@@ -359,11 +337,9 @@ gulp.task('default', ['clear:dist'], done => {
       'start',
       'clear',
       'ssl:dist',
-      'appcache:dist',
       'images',
       'lint',
       'html:dist',
-      'websync:dist',
       'service-worker',
       'sw:dist',
       'manifest:dist',

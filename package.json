@@ -21,8 +21,6 @@
   "homepage": "https://github.com/oilsinwater/mws-restaurant#readme",
   "dependencies": {
     "dexie": "^2.0.4",
-    "dexie-observable": "^1.0.0-beta.5",
-    "dexie-syncable": "^1.0.0-beta.4",
     "lazysizes": "^4.1.4",
     "workbox-build": "^3.6.3",
     "workbox-cli": "^3.6.3"

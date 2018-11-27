@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+
+
 /**
  * Welcome to your Workbox-powered service worker!
  *
@@ -11,9 +14,9 @@
  * See https://goo.gl/2aRDsh
  */
 
-importScripts(
-  'https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js'
-);
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js');
+
+workbox.core.setCacheNameDetails({prefix: 'mwsrestaurants-reviews'});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
@@ -24,16 +27,4 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerRoute(
-  /\.(?:png|jpg|webp)$/,
-  workbox.strategies.cacheFirst({
-    cacheName: 'img',
-    plugins: [
-      new workbox.expiration.Plugin({
-        maxEntries: 49,
-        purgeOnQuotaError: false
-      })
-    ]
-  }),
-  'GET'
-);
+workbox.routing.registerRoute(/\.(?:png|jpg|webp)$/, workbox.strategies.cacheFirst({ 'cacheName':'img', plugins: [new workbox.expiration.Plugin({'maxEntries':49,'purgeOnQuotaError':false})] }), 'GET');
