@@ -31,7 +31,7 @@ gulp.task('lint', () => {
 
 // clear files from temp
 gulp.task('clear', () => {
-  del(['.tmp/**/*']);
+  del(['build/**/*']);
 });
 
 // clear files from dist
@@ -54,7 +54,7 @@ gulp.task('unaltered', () => {
   return gulp
     .src('src/img/unaltered/**')
     .pipe(gulp.dest('dist/img/unaltered'))
-    .pipe(gulp.dest('.tmp/img/unaltered'));
+    .pipe(gulp.dest('build/img/unaltered'));
 });
 
 // Builds responsive images
@@ -100,7 +100,7 @@ gulp.task('images', ['unaltered'], () => {
         )
       )
     )
-    .pipe(gulp.dest('.tmp/img'))
+    .pipe(gulp.dest('build/img'))
     .pipe(gulp.dest('dist/img'));
 });
 
@@ -126,7 +126,7 @@ gulp.task('html', () => {
         })
       )
     )
-    .pipe(gulp.dest('.tmp'));
+    .pipe(gulp.dest('build'));
 });
 
 // Scan html for js and css then optimize
@@ -176,14 +176,14 @@ gulp.task('html:dist', () => {
 
 // process sw
 gulp.task('sw', () => {
-  let bundler = browserify('./.tmp/sw.js', {
+  let bundler = browserify('./build/sw.js', {
     debug: true
   });
   return bundler
     .bundle() // concatenation
     .pipe(source('sw.js'))
     .pipe(buffer())
-    .pipe(gulp.dest('.tmp')); // get stream with pathname
+    .pipe(gulp.dest('build')); // get stream with pathname
 });
 
 // optimize sw
@@ -252,12 +252,12 @@ gulp.task('service-worker', () => {
 });
 
 gulp.task('service-temp', () => {
-  return gulp.src('src/sw.js').pipe(gulp.dest('.tmp/'));
+  return gulp.src('src/sw.js').pipe(gulp.dest('build/'));
 });
 
 // Copy web manifest
 gulp.task('manifest', () => {
-  return gulp.src('src/manifest.json').pipe(gulp.dest('.tmp/'));
+  return gulp.src('src/manifest.json').pipe(gulp.dest('build/'));
 });
 
 gulp.task('manifest:dist', () => {
@@ -269,14 +269,16 @@ gulp.task('ssl', () => {
   return gulp
     .src('src/ssl/**')
     .pipe(gulp.dest('dist/ssl'))
-    .pipe(gulp.dest('.tmp/ssl'));
+    .pipe(gulp.dest('build/ssl'));
 });
 
-gulp.task('ssl:dist', () => {
-  return gulp.src('src/ssl/**').pipe(gulp.dest('dist/ssl/'));
+// Copy ssl files
+gulp.task('appcache', () => {
+  return gulp
+    .src('src/appcache.manifest')
+    .pipe(gulp.dest('dist/'))
+    .pipe(gulp.dest('build/'));
 });
-
-//
 
 // Watch changes and reload
 gulp.task('serve', () => {
@@ -285,6 +287,7 @@ gulp.task('serve', () => {
       'start',
       'clear',
       'ssl',
+      'appcache',
       'images',
       'lint',
       'html',
@@ -297,7 +300,7 @@ gulp.task('serve', () => {
       bs.init({
         browser: 'google chrome',
         loglevel: 'debug',
-        server: '.tmp',
+        server: 'build',
         port: 3030,
         https: {
           key: 'dist/ssl/mwsrestaurants.com.key',
@@ -336,7 +339,8 @@ gulp.task('default', ['clear:dist'], done => {
     [
       'start',
       'clear',
-      'ssl:dist',
+      'ssl',
+      'appcache',
       'images',
       'lint',
       'html:dist',
