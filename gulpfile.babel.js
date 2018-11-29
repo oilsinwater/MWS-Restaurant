@@ -17,6 +17,7 @@ import workboxBuild from 'workbox-build';
 
 const bs = require('browser-sync').create();
 
+let fs = require('fs');
 let $ = gulpLoadPlugins();
 let reload = bs.reload;
 
@@ -106,11 +107,14 @@ gulp.task('images', ['unaltered'], () => {
 
 // Prep process of js, css, html files
 gulp.task('html', () => {
+  var mapKey = fs.readFileSync('MAP_KEY', 'utf8');
+
   return gulp
     .src('src/*.html')
     .pipe($.useref())
     .pipe($.if('*.css', $.autoprefixer()))
     .pipe($.if('*.js', $.babel()))
+    .pipe($.stringReplace('<INSERT_TOKEN>', mapKey))
     .pipe(
       $.if(
         '*.html',
@@ -131,6 +135,8 @@ gulp.task('html', () => {
 
 // Scan html for js and css then optimize
 gulp.task('html:dist', () => {
+  var mapKey = fs.readFileSync('MAP_KEY', 'utf8');
+
   return gulp
     .src('src/*.html')
     .pipe($.size({ title: 'html (before)' }))
@@ -149,6 +155,7 @@ gulp.task('html:dist', () => {
     .pipe($.if('*.css', $.size({ title: 'css (after)' })))
     .pipe($.if('*.css', $.autoprefixer()))
     .pipe($.if('*.js', $.babel()))
+    .pipe($.stringReplace('<INSERT_TOKEN>', mapKey))
     .pipe($.if('*.js', $.size({ title: 'js (before)' })))
     .pipe($.if('*.js', $.uglifyEs.default()))
     .pipe($.if('*.js', $.size({ title: 'js (after)' })))
