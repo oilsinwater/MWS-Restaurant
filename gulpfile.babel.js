@@ -44,7 +44,6 @@ gulp.task('clear:dist', () => {
 gulp.task('start', () => {
   console.log('ssssip...ssssssip....sssssssssip ');
 });
-
 // Signature finish
 gulp.task('neck', () => {
   console.log('...GUUULP!!');
@@ -107,7 +106,7 @@ gulp.task('images', ['unaltered'], () => {
 
 // Prep process of js, css, html files
 gulp.task('html', () => {
-  var mapKey = fs.readFileSync('MAP_KEY', 'utf8');
+  let mapKey = fs.readFileSync('MAP_KEY', 'utf8');
 
   return gulp
     .src('src/*.html')
@@ -135,7 +134,7 @@ gulp.task('html', () => {
 
 // Scan html for js and css then optimize
 gulp.task('html:dist', () => {
-  var mapKey = fs.readFileSync('MAP_KEY', 'utf8');
+  let mapKey = fs.readFileSync('MAP_KEY', 'utf8');
 
   return gulp
     .src('src/*.html')
@@ -224,11 +223,12 @@ gulp.task('sw:dist', () => {
 
 // Generate a service worker
 gulp.task('service-worker', () => {
+  let swDest = 'dist/sw.js';
   return workboxBuild
     .generateSW({
       cacheId: 'mwsrestaurants-reviews',
       globDirectory: 'dist',
-      swDest: 'dist/sw.js',
+      swDest: swDest,
       globPatterns: ['**/*.{css,json,jpg,ico,png,html,js,crt,key}'],
       // store content requests at runtime
       runtimeCaching: [
@@ -241,16 +241,15 @@ gulp.task('service-worker', () => {
             cacheName: 'img',
             // Limit to cache images
             expiration: {
-              maxEntries: 49 // arbitrary...
+              maxEntries: 200 // arbitrary...
             }
           }
         }
       ]
     })
-    .then(resources => {
+    .then(({ count, size }) => {
       console.log(
-        `Injected ${resources.count} resouces for precaching,` +
-          `totaling ${resources.size} bytes.`
+        `Generated ${swDest} which will precache ${count} files, totaling ${size} bytes.`
       );
     })
     .catch(err => {
@@ -273,10 +272,11 @@ gulp.task('manifest:dist', () => {
 
 // Copy ssl files
 gulp.task('ssl', () => {
-  return gulp
-    .src('src/ssl/**')
-    .pipe(gulp.dest('dist/ssl'))
-    .pipe(gulp.dest('build/ssl'));
+  return gulp.src('src/ssl/dev/**').pipe(gulp.dest('build/ssl'));
+});
+
+gulp.task('ssl:dist', () => {
+  return gulp.src('src/ssl/pro/**').pipe(gulp.dest('dist/ssl'));
 });
 
 // Watch changes and reload
@@ -301,8 +301,8 @@ gulp.task('serve', () => {
         server: 'build',
         port: 3030,
         https: {
-          key: 'dist/ssl/mwsrestaurants.com.key',
-          cert: 'dist/ssl/mwsrestaurants.com.crt'
+          key: 'build/ssl/mwsrestaurants.com.key',
+          cert: 'build/ssl/mwsrestaurants.com.crt'
         }
       });
       // watch
@@ -319,8 +319,14 @@ gulp.task('serve', () => {
 // Bundle and serve the optimized site
 gulp.task('serve:dist', ['default'], () => {
   bs.init({
+    browser: 'google chrome',
+    loglevel: 'debug',
     server: 'dist',
-    port: 8000
+    port: 8000,
+    https: {
+      key: 'dist/ssl/mwsrestaurants.com.key',
+      cert: 'dist/ssl/mwsrestaurants.com.crt'
+    }
   });
 
   gulp.watch(['src/*.html'], ['html:dist', reload]);
@@ -337,7 +343,7 @@ gulp.task('default', ['clear:dist'], done => {
     [
       'start',
       'clear',
-      'ssl',
+      'ssl:dist',
       'images',
       'lint',
       'html:dist',

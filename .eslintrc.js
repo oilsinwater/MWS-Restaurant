@@ -11,7 +11,7 @@ module.exports = {
   rules: {
     semi: ['error', 'always'],
     quotes: ['warn', 'single'],
-    indent: ['error', 2],
+    indent: ['warn', 2],
     'no-useless-escape': 'warn',
     'no-undef': 'warn',
     'no-useless-return': 'warn',

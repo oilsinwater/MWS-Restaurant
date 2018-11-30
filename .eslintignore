@@ -1,3 +1,4 @@
 /build/js/lib/**
 /dist/js/lib/**
 /src/js/lib/**
+node_modules/
