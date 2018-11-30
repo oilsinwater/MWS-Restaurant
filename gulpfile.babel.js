@@ -14,7 +14,6 @@ import lazypipe from 'lazypipe';
 import pngquant from 'imagemin-pngquant';
 import imagemin from 'gulp-imagemin';
 import workboxBuild from 'workbox-build';
-import connect from 'gulp-connect';
 
 const bs = require('browser-sync').create();
 
@@ -107,7 +106,7 @@ gulp.task('images', ['unaltered'], () => {
 
 // Prep process of js, css, html files
 gulp.task('html', () => {
-  let mapKey = fs.readFileSync('MAP_KEY', 'utf8');
+  let mapKey = fs.readFileSync('src/MAP_KEY', 'utf8');
 
   return gulp
     .src('src/*.html')
@@ -135,7 +134,7 @@ gulp.task('html', () => {
 
 // Scan html for js and css then optimize
 gulp.task('html:dist', () => {
-  let mapKey = fs.readFileSync('MAP_KEY', 'utf8');
+  let mapKey = fs.readFileSync('src/MAP_KEY', 'utf8');
 
   return gulp
     .src('src/*.html')
@@ -295,19 +294,14 @@ gulp.task('serve', () => {
       'neck'
     ],
     () => {
-      // bs.init({
-      //   browser: 'google chrome',
-      //   loglevel: 'debug',
-      //   server: 'build',
-      //   port: 3030
-      // });
-      connect.server({
-        name: 'Dev app',
-        root: ['/build'],
-        port: 8000,
-        livereload: true
+      bs.init({
+        browser: 'google chrome',
+        loglevel: 'debug',
+        server: 'build',
+        port: 3030
       });
       // watch
+      gulp.watch(['src/*.html', 'MAP_KEY'], ['html', reload]);
       gulp.watch(['src/*.html'], ['html', reload]);
       gulp.watch(['src/img/**'], ['images', reload]);
       gulp.watch(['src/css/*.css'], ['html', reload]);
