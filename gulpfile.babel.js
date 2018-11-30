@@ -14,6 +14,7 @@ import lazypipe from 'lazypipe';
 import pngquant from 'imagemin-pngquant';
 import imagemin from 'gulp-imagemin';
 import workboxBuild from 'workbox-build';
+import connect from 'gulp-connect';
 
 const bs = require('browser-sync').create();
 
@@ -294,11 +295,17 @@ gulp.task('serve', () => {
       'neck'
     ],
     () => {
-      bs.init({
-        browser: 'google chrome',
-        loglevel: 'debug',
-        server: 'build',
-        port: 3030
+      // bs.init({
+      //   browser: 'google chrome',
+      //   loglevel: 'debug',
+      //   server: 'build',
+      //   port: 3030
+      // });
+      connect.server({
+        name: 'Dev app',
+        root: ['/build'],
+        port: 8000,
+        livereload: true
       });
       // watch
       gulp.watch(['src/*.html'], ['html', reload]);
