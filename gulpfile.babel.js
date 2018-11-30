@@ -301,8 +301,8 @@ gulp.task('serve', () => {
         server: 'build',
         port: 3030,
         https: {
-          key: 'build/ssl/mwsrestaurants.com.key',
-          cert: 'build/ssl/mwsrestaurants.com.crt'
+          key: 'build/ssl/localhost.key.pem',
+          cert: 'build/ssl/localhost.cert.pem'
         }
       });
       // watch
@@ -324,8 +324,8 @@ gulp.task('serve:dist', ['default'], () => {
     server: 'dist',
     port: 8000,
     https: {
-      key: 'dist/ssl/mwsrestaurants.com.key',
-      cert: 'dist/ssl/mwsrestaurants.com.crt'
+      key: 'dist/ssl/localhost.key.pem',
+      cert: 'dist/ssl/localhost.cert.pem'
     }
   });
 
