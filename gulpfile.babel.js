@@ -270,14 +270,14 @@ gulp.task('manifest:dist', () => {
   return gulp.src('src/manifest.json').pipe(gulp.dest('dist/'));
 });
 
-// Copy ssl files
-gulp.task('ssl', () => {
-  return gulp.src('src/ssl/dev/**').pipe(gulp.dest('build/ssl'));
-});
+// // Copy ssl files
+// gulp.task('ssl', () => {
+//   return gulp.src('src/ssl/dev/**').pipe(gulp.dest('build/ssl'));
+// });
 
-gulp.task('ssl:dist', () => {
-  return gulp.src('src/ssl/pro/**').pipe(gulp.dest('dist/ssl'));
-});
+// gulp.task('ssl:dist', () => {
+//   return gulp.src('src/ssl/pro/**').pipe(gulp.dest('dist/ssl'));
+// });
 
 // Watch changes and reload
 gulp.task('serve', () => {
@@ -285,7 +285,6 @@ gulp.task('serve', () => {
     [
       'start',
       'clear',
-      'ssl',
       'images',
       'lint',
       'html',
@@ -299,11 +298,7 @@ gulp.task('serve', () => {
         browser: 'google chrome',
         loglevel: 'debug',
         server: 'build',
-        port: 3030,
-        https: {
-          key: 'build/ssl/localhost.key.pem',
-          cert: 'build/ssl/localhost.cert.pem'
-        }
+        port: 3030
       });
       // watch
       gulp.watch(['src/*.html'], ['html', reload]);
@@ -322,11 +317,7 @@ gulp.task('serve:dist', ['default'], () => {
     browser: 'google chrome',
     loglevel: 'debug',
     server: 'dist',
-    port: 8000,
-    https: {
-      key: 'dist/ssl/localhost.key.pem',
-      cert: 'dist/ssl/localhost.cert.pem'
-    }
+    port: 8000
   });
 
   gulp.watch(['src/*.html'], ['html:dist', reload]);
@@ -343,7 +334,6 @@ gulp.task('default', ['clear:dist'], done => {
     [
       'start',
       'clear',
-      'ssl:dist',
       'images',
       'lint',
       'html:dist',
