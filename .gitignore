@@ -10,7 +10,6 @@ node_modules/
 # dist, tmp folder
 /build
 /dist
-/.tmp
 
 # MapBox API keys
 MAP_KEY

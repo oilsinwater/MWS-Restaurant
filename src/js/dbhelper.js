@@ -18,43 +18,62 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
-    // let xhr = new XMLHttpRequest();
-    // xhr.open('GET', DBHelper.DATABASE_URL);
-    // xhr.onload = () => {
-    //   if (xhr.status === 200) {
-    //     // Got a success response from server!
-    //     const json = JSON.parse(xhr.responseText);
-    //     const restaurants = json.restaurants;
-    //     callback(null, restaurants);
-    //   } else {
-    //     // Oops!. Got an error from server.
-    //     const error = `Request failed. Returned status of ${xhr.status}`;
-    //     callback(error, null);
-    //   }
-    // };
-    // xhr.send();
+  // static fetchRestaurants(callback) {
+  //   // let xhr = new XMLHttpRequest();
+  //   // xhr.open('GET', DBHelper.DATABASE_URL);
+  //   // xhr.onload = () => {
+  //   //   if (xhr.status === 200) {
+  //   //     // Got a success response from server!
+  //   //     const json = JSON.parse(xhr.responseText);
+  //   //     const restaurants = json.restaurants;
+  //   //     callback(null, restaurants);
+  //   //   } else {
+  //   //     // Oops!. Got an error from server.
+  //   //     const error = `Request failed. Returned status of ${xhr.status}`;
+  //   //     callback(error, null);
+  //   //   }
+  //   // };
+  //   // xhr.send();
 
+  //   fetch(DBHelper.DATABASE_URL)
+  //     .then(response => {
+  //       if (!response.ok) {
+  //         throw Error(
+  //           `Request failed. Returned status of ${response.statusText}`
+  //         );
+  //       }
+  //       const restaurants = response.json();
+  //       return restaurants;
+  //     })
+  //     .then(restaurants => callback(null, restaurants))
+  //     .catch(err => callback(err, null));
+
+  //   /*
+  //   fetch(DBHelper.DATABASE_URL)
+  //     .then(response => response.json())
+  //     .then(restaurants => callback(null, restaurants))
+  //     .catch(err => callback(err, null));
+  //   */
+  // }
+
+  static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL)
       .then(response => {
-        if (!response.ok) {
-          throw Error(
-            `Request failed. Returned status of ${response.statusText}`
+        if (response.status === 200) {
+          response
+            .json()
+            .then(json => callback(null, json))
+            .catch(error => callback(error, null));
+        } else {
+          callback(
+            `Request failed. Returned status of ${response.status}`,
+            null
           );
         }
-        const restaurants = response.json();
-        return restaurants;
       })
-      .then(restaurants => callback(null, restaurants))
-      .catch(err => callback(err, null));
-
-    /*
-    fetch(DBHelper.DATABASE_URL)
-      .then(response => response.json())
-      .then(restaurants => callback(null, restaurants))
-      .catch(err => callback(err, null));
-    */
+      .catch(error => callback(error, null));
   }
+
   /**
    * Fetch a restaurant by its ID.
    */
@@ -239,5 +258,32 @@ class DBHelper {
     map.innerHTML = `<div class="warning-icon">!</div>
     <div class="warning-message">Maps is haven't trouble loading..</div>
     <div class="warning-suggestion">You appear to be offline. To access maps, connect to a network.</div>`;
+  }
+
+  /**
+   * Fetch reviews for a restaurant.
+   */
+  static fetchReviewsForRestaurant(id, callback) {
+    fetch('http://localhost:1337/reviews/?restaurant_id=' + id)
+      .then(response => {
+        if (response.status === 200) {
+          response
+            .json()
+            .then(json => {
+              callback(null, json);
+            })
+            .catch(err => {
+              callback(err, null);
+            });
+        } else {
+          callback(
+            `Request failed. Returned status of ${response.status}`,
+            null
+          );
+        }
+      })
+      .catch(err => {
+        callback(err, null);
+      });
   }
 }

@@ -1,8 +1,11 @@
 const registerWorker = () => {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(
-      () => {
-        console.log('CLIENT: service worker registration complete!');
+      registration => {
+        console.log(
+          'CLIENT: service worker registration complete!',
+          registration
+        );
       },
       error => {
         console.log(
@@ -11,6 +14,9 @@ const registerWorker = () => {
         );
       }
     );
+    navigator.serviceWorker.ready.then(function(registration) {
+      console.log('Service Worker Ready', registration);
+    });
   }
 };
 

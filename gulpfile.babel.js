@@ -13,7 +13,6 @@ import runSequence from 'run-sequence';
 import lazypipe from 'lazypipe';
 import pngquant from 'imagemin-pngquant';
 import imagemin from 'gulp-imagemin';
-import workboxBuild from 'workbox-build';
 
 const bs = require('browser-sync').create();
 
@@ -129,7 +128,7 @@ gulp.task('html', () => {
         })
       )
     )
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build/'));
 });
 
 // Scan html for js and css then optimize
@@ -221,55 +220,55 @@ gulp.task('sw:dist', () => {
     .pipe(gulp.dest('dist'));
 });
 
-// Generate a service worker
-gulp.task('service-worker', () => {
-  let swDest = 'dist/sw.js';
-  return workboxBuild
-    .generateSW({
-      cacheId: 'mwsrestaurants-reviews',
-      globDirectory: 'dist',
-      swDest: swDest,
-      globPatterns: ['**/*.{css,json,jpg,ico,png,html,js,crt,key}'],
-      // store content requests at runtime
-      runtimeCaching: [
-        {
-          urlPattern: /\.(?:png|jpg|webp)$/,
-          // Apply a cache-first strategy
-          handler: 'cacheFirst',
-          options: {
-            // custom cache name
-            cacheName: 'img',
-            // Limit to cache images
-            expiration: {
-              maxEntries: 200 // arbitrary...
-            }
-          }
-        }
-      ]
-    })
-    .then(({ count, size }) => {
-      console.log(
-        `Generated ${swDest} which will precache ${count} files, totaling ${size} bytes.`
-      );
-    })
-    .catch(err => {
-      console.log(`Failed with error: ${err}`);
-    });
-});
+// // Generate a service worker
+// gulp.task('service-worker', () => {
+//   let swDest = 'dist/sw.js';
+//   return workboxBuild
+//     .generateSW({
+//       cacheId: 'mwsrestaurants-reviews',
+//       globDirectory: 'dist',
+//       swDest: swDest,
+//       globPatterns: ['**/*.{css,json,jpg,ico,png,html,js,crt,key}'],
+//       // store content requests at runtime
+//       runtimeCaching: [
+//         {
+//           urlPattern: /\.(?:png|jpg|webp)$/,
+//           // Apply a cache-first strategy
+//           handler: 'cacheFirst',
+//           options: {
+//             // custom cache name
+//             cacheName: 'img',
+//             // Limit to cache images
+//             expiration: {
+//               maxEntries: 200 // arbitrary...
+//             }
+//           }
+//         }
+//       ]
+//     })
+//     .then(({ count, size }) => {
+//       console.log(
+//         `Generated ${swDest} which will precache ${count} files, totaling ${size} bytes.`
+//       );
+//     })
+//     .catch(err => {
+//       console.log(`Failed with error: ${err}`);
+//     });
+// });
 
-gulp.task('service-temp', () => {
-  return gulp.src('src/sw.js').pipe(gulp.dest('build/'));
+gulp.task('service-worker', () => {
+  return gulp
+    .src('src/sw.js')
+    .pipe(gulp.dest('build/'))
+    .pipe(gulp.dest('dist/'));
 });
 
 // Copy web manifest
 gulp.task('manifest', () => {
-  return gulp.src('src/manifest.json').pipe(gulp.dest('build/'));
+  return gulp
+    .src('src/manifest.json')
+    .pipe(gulp.dest('dist/').pipe(gulp.dest('build/')));
 });
-
-gulp.task('manifest:dist', () => {
-  return gulp.src('src/manifest.json').pipe(gulp.dest('dist/'));
-});
-
 // // Copy ssl files
 // gulp.task('ssl', () => {
 //   return gulp.src('src/ssl/dev/**').pipe(gulp.dest('build/ssl'));
@@ -288,7 +287,7 @@ gulp.task('serve', () => {
       'images',
       'lint',
       'html',
-      'service-temp',
+      'service-worker',
       'sw',
       'manifest',
       'neck'
@@ -328,7 +327,6 @@ gulp.task('serve:dist', ['default'], () => {
   gulp.watch(['src/sw.js'], ['lint', 'sw:dist', reload]);
   gulp.watch(['src/manifest.json'], ['manifest:dist', reload]);
 });
-
 // Build production files in order,
 gulp.task('default', ['clear:dist'], done => {
   runSequence(
@@ -340,7 +338,7 @@ gulp.task('default', ['clear:dist'], done => {
       'html:dist',
       'service-worker',
       'sw:dist',
-      'manifest:dist',
+      'manifest',
       'neck'
     ],
     done

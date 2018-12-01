@@ -1,4 +1,7 @@
-/build/js/lib/**
-/dist/js/lib/**
-/src/js/lib/**
+/build/js/sw.js
+/dist/js/sw.js
+/src/js/sw.js
+/src/js/idb.js
+/src/js/lazysizes.min.js
+
 node_modules/

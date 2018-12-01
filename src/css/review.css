@@ -359,7 +359,20 @@ td, th {
   letter-spacing: 0px;
 }
 
+#new-review {
+  padding: 10px 0 20px 16px;
+  width: 50%;
+  max-width: 400px;
+}
 
+#name, #comment, #rating {
+  display: block;
+  margin-top: 8px;
+}
+
+#name, #comment {
+  width: 270px;
+}
 
 /* ====================== Restaurant Details ====================== */
 
