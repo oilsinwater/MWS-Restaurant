@@ -2,7 +2,7 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 
-## Stage 2:
+## Stage 2 & 3:
 
 Clone repo and run `npm i`.
 
@@ -19,7 +19,7 @@ Clone repo and run `npm i`.
 
 #### Run development 
 
-`npm run dev`
+`npm run build`
 
 # User Interface
 
